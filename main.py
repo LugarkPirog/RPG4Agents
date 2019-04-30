@@ -14,34 +14,36 @@ import sys
 from world.world import *
 
 
-#def main(**kw):
-#    pass
+# class B:
+#     def __init__(self):
+#         pass
+#
+#     def __set__(self, instance, value):
+#         instance.x = value[0]
+#         instance.y = value[1]
+#
+#     def __get__(self, instance, owner):
+#         return instance.x, instance.y
+#
+#
+# class A:
+#     b = B
+#
+#     def __init__(self):
+#         self.x = 0
+#         self.y = 0
+#
+#
+# a = A()
+# a.b = 10, 10
+# print(a.b)
 
-class B:
-    def __init__(self):
-        pass
-
-    def __set__(self, instance, value):
-        instance.x = value[0]
-        instance.y = value[1]
-
-    def __get__(self, instance, owner):
-        return instance.x, instance.y
+def main(**kw):
+    w = WorldGrid()
+    w.start()
 
 
-class A:
-    b = B
+if __name__ == '__main__':
 
-    def __init__(self):
-        self.x = 0
-        self.y = 0
-
-
-a = A()
-a.b = 10, 10
-print(a.b)
-
-#if __name__ == '__main__':
-    #w = WorldGrid()
-    #w.start()
+    main()
 

@@ -10,6 +10,6 @@ class WorldGrid:
     def create_player(self):
         pass
 
-    def start(self):
+    def start(self, show=True):
         pass
 

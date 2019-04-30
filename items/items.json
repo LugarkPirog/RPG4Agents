@@ -1,11 +1,9 @@
 {
   "1": {
     "id": 1,
-    "description": {
-      "name": "Stick",
-      "type": "weapon",
-      "damage": 1,
-      "attacks_per_second": 1
-    }
+    "name": "Stick",
+    "type": "weapon",
+    "damage": 1,
+    "attacks_per_second": 1
   }
 }

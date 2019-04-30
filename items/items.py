@@ -1,27 +1,37 @@
 import json
 import os
+from settings import DEBUG
+import logging
 
+if DEBUG:
+    logging.basicConfig(level=logging.DEBUG)
 
 ITEMS = os.path.abspath('..') + '\\items\\items.json'
 
 
 class BaseItem:
     def __init__(self, *args, **kw):
-        self.id = kw.get('id')
-        self.name = kw.get('name')
-        self.description = {}
-        self._load()
 
-    def _load(self):
-        with open(ITEMS, 'r') as f:
-            self.description = json.load(f).get(str(self.id)) or {}
-            f.close()
+        logging.debug('BaseItem init kw: ' + str(kw))
 
-    def __getattr__(self, item):
+        def load(id):
+            with open(ITEMS, 'r') as f:
+                description = json.load(f).get(str(id)) or {}
+                f.close()
+            logging.debug('BaseItem init load descr: ' + str(description))
+            return description
+
+        self.description = load(kw.get('id'))
+
+
+    # def __getattr__(self, item):
+    #     return self.description.get(item)
+
+    # def __getattribute__(self, item):
+    #     return self.description.get(item)
+
+    def __getitem__(self, item):
         return self.description.get(item)
-
-    #def __getattribute__(self, item):
-    #    return self.description.get(item)
 
 
 class Wearable(BaseItem):
@@ -39,3 +49,8 @@ class Weapon(BaseItem):
 class Empty(BaseItem):
     def __init__(self, *args, **kw):
         super(Empty, self).__init__(*args, **kw)
+
+
+if __name__ == '__main__':
+    i = BaseItem(id='1')
+    print(i['damage'])
