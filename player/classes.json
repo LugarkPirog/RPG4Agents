@@ -1,0 +1,12 @@
+{"warrior": {"str": 5, "dex": 3, "int": 1,
+  "vit": 5
+},
+  "mage": {"str": 2, "dex": 3, "int": 6,
+    "vit": 3
+  },
+  "archer": {"str": 2, "dex": 5, "int": 3,
+    "vit": 4
+  },
+  "knight": {"str": 3, "dex": 4, "int": 2,
+    "vit": 5
+  }}
