@@ -71,9 +71,9 @@ class Player(object):
     def notify(func):
         def f(self, *args, **kwargs):
             res = func(self, *args, **kwargs)
-            m = self.name + '_' + func.__name__
-            self.s.send_string(m)
-            logging.debug('sending ' + m)
+            msg = self.name + '_' + func.__name__
+            self.s.send(msg.encode('utf-8'))
+            logging.debug('sending ' + msg)
             return res
         return f
 

@@ -15,8 +15,8 @@ args = p.parse_args()
 
 cont = zmq.Context()
 s = cont.socket(zmq.PUB)
-s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-s.setblocking(False)
+#s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+#s.setblocking(False)
 
 addr = 'tcp://' + args.ip + ':322'
 
@@ -24,7 +24,8 @@ s.bind(addr)
 i = 0
 while True:
     n = args.delay
-    s.send_string('abc_' + str(n))
+    msg = 'abc_' + str(n)
+    s.send(msg.encode('utf-8'))
     time.sleep(n)
     print(str(i) + '\r', end='')
     i += 1

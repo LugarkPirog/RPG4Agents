@@ -24,8 +24,8 @@ class WorldGrid(object):
     def start(self, show=True):
         while True:
             print('Waiting for data')
-            msg = self.s.recv()
-            print(msg)
+            msg = self.s.recv(2048)
+            print(msg.decode())
 
 
 if __name__ == '__main__':

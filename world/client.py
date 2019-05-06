@@ -13,16 +13,16 @@ addr = 'tcp://' + args.ip + ':322'
 s.connect(addr)
 
 s.setsockopt_string(zmq.SUBSCRIBE, '')
-s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-s.setblocking(False)
+#s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+#s.setblocking(False)
 
 print('Connected')
 i = 0
 
 while True:
     print(str(i) + '\r', end='')
-    st = s.recv()
-    print(st)
+    st = s.recv(2048)
+    print(st.decode('utf-8'))
     i += 1
 
 # python PycharmProjects/RPG4Agents/world/client.py
