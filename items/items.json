@@ -4,6 +4,13 @@
     "name": "Stick",
     "type": "weapon",
     "damage": 1,
-    "attacks_per_second": 1
+    "attacks_per_second": 1.0
+  },
+  "2": {
+    "id": 2,
+    "name": "Spear",
+    "type": "weapon",
+    "damage": 2,
+    "attacks_per_second": 0.7
   }
 }

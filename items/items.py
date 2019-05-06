@@ -1,15 +1,24 @@
 import json
 import os
-from settings import DEBUG
+import sys
 import logging
+
+if __name__ == '__main__':
+    base_path = '.'
+    sys.path.insert(0, os.path.abspath('.'))
+else:
+    base_path = '.'
+
+from settings import DEBUG
+
 
 if DEBUG:
     logging.basicConfig(level=logging.DEBUG)
 
-ITEMS = os.path.abspath('..') + '\\items\\items.json'
+ITEMS = os.path.abspath(base_path) + '\\items\\items.json'
 
 
-class BaseItem:
+class BaseItem(object):
     def __init__(self, *args, **kw):
 
         logging.debug('BaseItem init kw: ' + str(kw))
