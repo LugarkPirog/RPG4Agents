@@ -25,7 +25,7 @@ i = 0
 while True:
     n = args.delay
     msg = 'abc_' + str(n)
-    s.send(msg.encode('utf-8'))
+    s.sendall(msg.encode('utf-8'))
     time.sleep(n)
     print(str(i) + '\r', end='')
     i += 1

@@ -1,7 +1,10 @@
 import numpy as np
-import zmq
+import socket
+import _thread
 
-PORT = '322'
+
+HOST = '127.0.0.1'
+PORT = 322
 
 
 class WorldGrid(object):
@@ -11,11 +14,27 @@ class WorldGrid(object):
         self.starting_pos = [0, 0]
         self.players = []
 
-        c = zmq.Context()
-        self.s = c.socket(zmq.SUB)
-        self.s.connect('tcp://localhost:322')
-        self.s.setsockopt_string(zmq.SUBSCRIBE, '')
-        print('Connected')
+        self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.s.setsockopt(socket.SOL_SOCKET,socket.SO_REUSEADDR,1)
+
+        self.s.bind((HOST, PORT))
+        self.s.listen()
+        print('Started. Listening')
+        # self.echo, addr = self.s.accept()
+
+    @staticmethod
+    def threaded_conn(conn):
+        while True:
+            msg = conn.recv(2048)
+            if msg:
+                print(msg.decode())
+            else:
+                print('Stopped.')
+                break
+            if msg.decode().split()[1] == 'quit':
+                print('Player disconnected!')
+                break
+        conn.close()
 
     def get_all_players_positions(self):
         positions = {a.name: a.pos for a in self.players}
@@ -23,9 +42,9 @@ class WorldGrid(object):
 
     def start(self, show=True):
         while True:
-            print('Waiting for data')
-            msg = self.s.recv(2048)
-            print(msg.decode())
+            conn, addr = self.s.accept()
+            print('Connected!')
+            _thread.start_new_thread(self.threaded_conn, (conn, ))
 
 
 if __name__ == '__main__':

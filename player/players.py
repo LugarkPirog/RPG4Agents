@@ -3,6 +3,8 @@ import json
 import os
 import sys
 import logging
+import socket
+import time
 
 if __name__ == '__main__':
     base_path = '.'
@@ -12,9 +14,11 @@ else:
 
 from settings import DEBUG
 from items.items import Empty, BaseItem
-import zmq
 from world.world import PORT as WORLD_PORT
 
+
+HOST = '127.0.0.1'
+PORT = 322
 
 if DEBUG:
     logging.basicConfig(level=logging.DEBUG)
@@ -64,15 +68,14 @@ class Player(object):
         self.health = self.stats['vit']*3 + 5
         self.pos = position
 
-        cont = zmq.Context()
-        self.s = cont.socket(zmq.PUB)
-        self.s.bind('tcp://127.0.0.1:322')
+        self.s = socket.socket()
+        self.s.connect((HOST, PORT))
 
     def notify(func):
         def f(self, *args, **kwargs):
             res = func(self, *args, **kwargs)
-            msg = self.name + '_' + func.__name__
-            self.s.send(msg.encode('utf-8'))
+            msg = self.name + ' ' + func.__name__
+            self.s.sendall(msg.encode('utf-8'))
             logging.debug('sending ' + msg)
             return res
         return f
@@ -102,6 +105,10 @@ class Player(object):
             pass
         return self.pos
 
+    @notify
+    def quit(self):
+        pass
+
     def __str__(self):
         tmp = '{:9s}: {:15s}\n'
         s = ''
@@ -119,37 +126,28 @@ class PlayerFactory(object):
 
 
 if __name__ == '__main__':
-    mode = 'player'
+    import sys
 
-    if mode == 'player':
-        p = Player('vassa', 'warrior', [0, 0])
-        it = BaseItem(id='2')
-        p.put_on(it)
+    pname = sys.argv[1]
 
-        # item wearing
-        print(p.wear['weapon'])
-        print(p.attack())
+    p = Player(pname, 'warrior', [0, 0])
+    it = BaseItem(id='2')
+    p.put_on(it)
 
-        # moving
-        print(p.pos)
-        p.move('n')
-        p.move('w')
-        p.move('w')
-        print(p.pos)
+    # item wearing
+    print(p.wear['weapon'])
+    print(p.attack())
 
-        # level up
+    # moving
+    print(p.pos)
+    for i in range(10):
+        d = np.random.choice(['n', 's', 'w', 'e'])
+        p.move(d)
+        time.sleep(1)
 
-        # spell casting
+    print(p.pos)
+    p.quit()
 
-    elif mode == 'factory':
-        p = PlayerFactory()
-        p1 = p.new_player('a', 'warrior', [0, 0])
-        p2 = p.new_player('b', 'mage', [0,0])
-        #p1 = Player('a', 'warrior', [0, 0])
-        #p2 = Player('b', 'warrior', [0, 0])
+    # level up
 
-        p1.move('n')
-        p2.move('s')
-
-        print(p1.name, p1._class, p1.pos)
-        print(p2.name, p2._class, p2.pos)
+    # spell casting
