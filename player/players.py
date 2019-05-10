@@ -7,25 +7,21 @@ import socket
 import time
 
 if __name__ == '__main__':
-    base_path = '.'
     sys.path.insert(0, os.path.abspath('.'))
-else:
-    base_path = '..'
 
 from settings import DEBUG
 from items.items import Empty, BaseItem
-from world.world import PORT as WORLD_PORT
+from world.world import PORT
 
 
 HOST = '127.0.0.1'
-PORT = 322
+# PORT = 322
 
 if DEBUG:
     logging.basicConfig(level=logging.DEBUG)
 
 
-CLASSES = os.path.abspath(base_path) + '\\player\\classes.json'
-print(os.path.exists(CLASSES))
+CLASSES = os.path.abspath('.') + '\\player\\classes.json'
 
 
 def add_new_class(name, strength, dexterity, intellegence, vitality):
@@ -74,9 +70,9 @@ class Player(object):
     def notify(func):
         def f(self, *args, **kwargs):
             res = func(self, *args, **kwargs)
-            msg = self.name + ' ' + func.__name__
+            msg = self.name + ';' + func.__name__ + ';' + str(res)
             self.s.sendall(msg.encode('utf-8'))
-            logging.debug('sending ' + msg)
+            logging.debug('sending ' + msg + '\r')
             return res
         return f
 
@@ -94,7 +90,7 @@ class Player(object):
     @notify
     def move(self, direction):
         if direction == 'n':
-            self.pos[0] +=1
+            self.pos[0] += 1
         elif direction == 's':
             self.pos[0] -= 1
         elif direction == 'w':
@@ -119,35 +115,55 @@ class Player(object):
         return s
 
 
-class PlayerFactory(object):
-    @staticmethod
-    def new_player(name, cls, pos):
-        return globals()['Player'](name, cls, pos)
+def play(name):
+    c = np.random.choice(['warrior', 'mage', 'archer'])
+    p = Player(name, c, [0, 0])
+    print('Starting as', c, n)
+    for i in range(5):
+        d = np.random.choice(['n', 's', 'w', 'e'])
+        p.move(d)
+        time.sleep(1)
+    p.quit()
 
 
 if __name__ == '__main__':
     import sys
+    from _thread import start_new_thread
 
-    pname = sys.argv[1]
+    if sys.argv[1] == 'chaos':
+        names = 'qwertyuioasd'
 
-    p = Player(pname, 'warrior', [0, 0])
-    it = BaseItem(id='2')
-    p.put_on(it)
+        for n in names:
+            start_new_thread(play,  (n, ))
+        print('Infinite looping while guys acting')
+        i = 0
+        while True:
+            i += 1
+            time.sleep(1)
+            print(i, '\r', end='')
 
-    # item wearing
-    print(p.wear['weapon'])
-    print(p.attack())
+    else:
+        pname = sys.argv[1]
 
-    # moving
-    print(p.pos)
-    for i in range(10):
-        d = np.random.choice(['n', 's', 'w', 'e'])
-        p.move(d)
-        time.sleep(1)
+        print(HOST, PORT)
+        p = Player(pname, 'warrior', [0, 0])
+        it = BaseItem(id='2')
+        p.put_on(it)
 
-    print(p.pos)
-    p.quit()
+        # item
+        print(p.wear['weapon'])
+        print(p.attack())
 
-    # level up
+        # moving
+        print(p.pos)
+        for i in range(10):
+            d = np.random.choice(['n', 's', 'w', 'e'])
+            p.move(d)
+            time.sleep(1)
 
-    # spell casting
+        print(p.pos)
+        p.quit()
+
+        # level up
+
+        # spell casting
