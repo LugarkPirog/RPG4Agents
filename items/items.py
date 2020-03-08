@@ -15,7 +15,7 @@ from settings import DEBUG
 if DEBUG:
     logging.basicConfig(level=logging.DEBUG)
 
-ITEMS = os.path.abspath(base_path) + '\\items\\items.json'
+ITEMS = os.path.abspath(base_path) + '/items/items.json'
 
 
 class BaseItem(object):

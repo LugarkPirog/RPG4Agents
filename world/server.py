@@ -22,8 +22,8 @@ addr = 'tcp://' + args.ip + ':322'
 
 s.bind(addr)
 i = 0
+n = args.delay
 while True:
-    n = args.delay
     msg = 'abc_' + str(n)
     s.sendall(msg.encode('utf-8'))
     time.sleep(n)

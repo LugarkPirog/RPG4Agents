@@ -21,7 +21,7 @@ if DEBUG:
     logging.basicConfig(level=logging.DEBUG)
 
 
-CLASSES = os.path.abspath('.') + '\\player\\classes.json'
+CLASSES = os.path.abspath('.') + '/player/classes.json'
 
 
 def add_new_class(name, strength, dexterity, intellegence, vitality):
